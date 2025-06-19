@@ -594,7 +594,46 @@ export function AdsTable({
             </table>
           </div>
         </div>
-        {/* Pagination Controls (remains the same) */}
+        <div className="flex items-center justify-between px-4 py-2 border-t bg-gray-50">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500">Rows per page:</span>
+            <select
+              className="border rounded px-2 py-1 text-xs"
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setPage(0);
+              }}
+            >
+              {pageSizes.map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              className="p-1 rounded disabled:opacity-50"
+              onClick={() => setPage((p: number) => Math.max(0, p - 1))}
+              disabled={page === 0}
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <span className="text-xs text-gray-500">
+              Page {page + 1} of {totalPages}
+            </span>
+            <button
+              className="p-1 rounded disabled:opacity-50"
+              onClick={() =>
+                setPage((p: number) => Math.min(totalPages - 1, p + 1))
+              }
+              disabled={page >= totalPages - 1}
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );
