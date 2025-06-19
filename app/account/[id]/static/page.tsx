@@ -1,19 +1,24 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useMemo } from "react"
-import { useParams } from "next/navigation"
-import { SearchAndFilter } from "@/components/ads/SearchAndFilter"
-import { MetricsBar } from "@/components/ads/MetricsBar"
-import { AdsTable } from "@/components/ads/AdsTable"
-import { AnalysisPanel } from "@/components/ads/AnalysisPanel"
-import { AdInfoModal } from "@/components/ads/AdInfoModal"
-import type { AdData, AvailableMetric, SelectionData, TableSelection } from "@/types/ads"
+import { useState, useEffect, useMemo } from "react";
+import { useParams } from "next/navigation";
+import { SearchAndFilter } from "@/components/ads/SearchAndFilter";
+import { MetricsBar } from "@/components/ads/MetricsBar";
+import { AdsTable } from "@/components/ads/AdsTable";
+import { AnalysisPanel } from "@/components/ads/AnalysisPanel";
+import { AdInfoModal } from "@/components/ads/AdInfoModal";
+import type {
+  AdData,
+  AvailableMetric,
+  SelectionData,
+  TableSelection,
+} from "@/types/ads";
 
 interface FilterCondition {
-  id: string
-  field: string
-  operator: string
-  value: string
+  id: string;
+  field: string;
+  operator: string;
+  value: string;
 }
 
 // Mock data for static ads
@@ -58,7 +63,8 @@ const mockStaticAds: AdData[] = [
     reach: 92000,
     frequency: 1.25,
     videoUrl: "/placeholder.svg?height=720&width=405",
-    script: "Discover our latest product lineup. Premium quality, innovative design, and unbeatable value.",
+    script:
+      "Discover our latest product lineup. Premium quality, innovative design, and unbeatable value.",
     callToAction: "Learn More",
     engagementTime: 6.2,
     likes: 890,
@@ -113,7 +119,7 @@ const mockStaticAds: AdData[] = [
     comments: 89,
     shares: 156,
   },
-  
+
   {
     id: "5",
     name: "App Feature Highlight",
@@ -138,15 +144,50 @@ const mockStaticAds: AdData[] = [
     comments: 56,
     shares: 78,
   },
-]
+];
+
+for (let i = 5; i <= 54; i++) {
+  const base = mockStaticAds[i % mockStaticAds.length];
+  mockStaticAds.push({
+    id: `${i}`,
+    name: `${base.name} #${i}`,
+    status: base.status,
+    spend: Math.floor(Math.random() * 5000 + 1000),
+    appInstalls: Math.floor(Math.random() * 300 + 50),
+    costPerAppInstall: parseFloat((Math.random() * 10 + 10).toFixed(2)),
+    purchases: Math.floor(Math.random() * 150 + 20),
+    costPerPurchase: parseFloat((Math.random() * 30 + 25).toFixed(2)),
+    impressions: Math.floor(Math.random() * 300000 + 50000),
+    clicks: Math.floor(Math.random() * 9000 + 1000),
+    ctr: parseFloat((Math.random() * 2 + 1.5).toFixed(2)),
+    cpm: parseFloat((Math.random() * 10 + 15).toFixed(2)),
+    reach: Math.floor(Math.random() * 200000 + 50000),
+    frequency: parseFloat((Math.random() * 0.5 + 1).toFixed(2)),
+    videoViews: Math.floor(Math.random() * 200000 + 20000),
+    videoViewRate: parseFloat((Math.random() * 15 + 60).toFixed(2)),
+    videoUrl: "/placeholder.svg?height=720&width=405",
+    script: base.script,
+    callToAction: base.callToAction,
+    engagementTime: parseFloat((Math.random() * 10 + 10).toFixed(1)),
+    likes: Math.floor(Math.random() * 2000),
+    comments: Math.floor(Math.random() * 200),
+    shares: Math.floor(Math.random() * 300),
+    watchTime: parseFloat((Math.random() * 5 + 10).toFixed(1)),
+    completionRate: parseFloat((Math.random() * 15 + 55).toFixed(1)),
+  });
+}
 
 const defaultMetrics: AvailableMetric[] = [
   { id: "spend", label: "Amount Spent", format: "currency" },
   { id: "appInstalls", label: "App Installs", format: "number" },
-  { id: "costPerAppInstall", label: "Cost per App Install", format: "currency" },
+  {
+    id: "costPerAppInstall",
+    label: "Cost per App Install",
+    format: "currency",
+  },
   { id: "purchases", label: "Purchases", format: "number" },
   { id: "costPerPurchase", label: "Cost per Purchase", format: "currency" },
-]
+];
 
 const additionalMetrics: AvailableMetric[] = [
   { id: "impressions", label: "Impressions", format: "number" },
@@ -155,86 +196,112 @@ const additionalMetrics: AvailableMetric[] = [
   { id: "cpm", label: "CPM", format: "currency" },
   { id: "reach", label: "Reach", format: "number" },
   { id: "frequency", label: "Frequency", format: "number" },
-]
+];
 
 export default function StaticAdsPage() {
-  const params = useParams()
-  const accountId = params.id as string
+  const params = useParams();
+  const accountId = params.id as string;
 
-  const [mounted, setMounted] = useState(false)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedFilter, setSelectedFilter] = useState("all")
-  const [selectedMetrics, setSelectedMetrics] = useState<AvailableMetric[]>(defaultMetrics)
-  const [advancedFilters, setAdvancedFilters] = useState<FilterCondition[]>([])
-  const [spendRange, setSpendRange] = useState<[number, number]>([1300, 8300])
-  const [isAnalysisPanelOpen, setIsAnalysisPanelOpen] = useState(false)
-  const [isAdInfoModalOpen, setIsAdInfoModalOpen] = useState(false)
-  const [selectionData, setSelectionData] = useState<SelectionData>({ type: "rows" })
-  const [tableSelection, setTableSelection] = useState<TableSelection | null>(null)
+  const [mounted, setMounted] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("all");
+  const [selectedMetrics, setSelectedMetrics] =
+    useState<AvailableMetric[]>(defaultMetrics);
+  const [advancedFilters, setAdvancedFilters] = useState<FilterCondition[]>([]);
+  const [spendRange, setSpendRange] = useState<[number, number]>([1300, 8300]);
+  const [isAnalysisPanelOpen, setIsAnalysisPanelOpen] = useState(false);
+  const [isAdInfoModalOpen, setIsAdInfoModalOpen] = useState(false);
+  const [selectionData, setSelectionData] = useState<SelectionData>({
+    type: "rows",
+  });
+  const [tableSelection, setTableSelection] = useState<TableSelection | null>(
+    null,
+  );
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   const availableMetrics = useMemo(() => {
-    return additionalMetrics.filter((metric) => !selectedMetrics.some((selected) => selected.id === metric.id))
-  }, [selectedMetrics])
+    return additionalMetrics.filter(
+      (metric) =>
+        !selectedMetrics.some((selected) => selected.id === metric.id),
+    );
+  }, [selectedMetrics]);
 
-  const applyConditionFilter = (ad: AdData, condition: FilterCondition): boolean => {
-    if (!condition.field || !condition.operator || !condition.value) return true
+  const applyConditionFilter = (
+    ad: AdData,
+    condition: FilterCondition,
+  ): boolean => {
+    if (!condition.field || !condition.operator || !condition.value)
+      return true;
 
-    const fieldValue = ad[condition.field as keyof AdData]
-    const filterValue = condition.value.toLowerCase()
+    const fieldValue = ad[condition.field as keyof AdData];
+    const filterValue = condition.value.toLowerCase();
 
     switch (condition.operator) {
       case "is":
-        return String(fieldValue).toLowerCase() === filterValue
+        return String(fieldValue).toLowerCase() === filterValue;
       case "is_not":
-        return String(fieldValue).toLowerCase() !== filterValue
+        return String(fieldValue).toLowerCase() !== filterValue;
       case "contains":
-        return String(fieldValue).toLowerCase().includes(filterValue)
+        return String(fieldValue).toLowerCase().includes(filterValue);
       case "not_contains":
-        return !String(fieldValue).toLowerCase().includes(filterValue)
+        return !String(fieldValue).toLowerCase().includes(filterValue);
       case "greater_than":
-        return Number(fieldValue) > Number(condition.value)
+        return Number(fieldValue) > Number(condition.value);
       case "less_than":
-        return Number(fieldValue) < Number(condition.value)
+        return Number(fieldValue) < Number(condition.value);
       default:
-        return true
+        return true;
     }
-  }
+  };
 
   const filteredAds = useMemo(() => {
     return mockStaticAds.filter((ad) => {
       // Search term filter
-      const matchesSearch = ad.name.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesSearch = ad.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
 
       // Status filter
-      const matchesStatus = selectedFilter === "all" || ad.status === selectedFilter
+      const matchesStatus =
+        selectedFilter === "all" || ad.status === selectedFilter;
 
       // Spend range filter
-      const matchesSpendRange = ad.spend >= spendRange[0] && ad.spend <= spendRange[1]
+      const matchesSpendRange =
+        ad.spend >= spendRange[0] && ad.spend <= spendRange[1];
 
       // Advanced condition filters
       const matchesConditions =
-        advancedFilters.length === 0 || advancedFilters.every((condition) => applyConditionFilter(ad, condition))
+        advancedFilters.length === 0 ||
+        advancedFilters.every((condition) =>
+          applyConditionFilter(ad, condition),
+        );
 
-      return matchesSearch && matchesStatus && matchesSpendRange && matchesConditions
-    })
-  }, [searchTerm, selectedFilter, spendRange, advancedFilters])
+      return (
+        matchesSearch && matchesStatus && matchesSpendRange && matchesConditions
+      );
+    });
+  }, [searchTerm, selectedFilter, spendRange, advancedFilters]);
 
-  const handleAdvancedFilter = (filters: FilterCondition[], newSpendRange: [number, number]) => {
-    setAdvancedFilters(filters.filter((f) => f.field && f.operator && f.value))
-    setSpendRange(newSpendRange)
-  }
+  const handleAdvancedFilter = (
+    filters: FilterCondition[],
+    newSpendRange: [number, number],
+  ) => {
+    setAdvancedFilters(filters.filter((f) => f.field && f.operator && f.value));
+    setSpendRange(newSpendRange);
+  };
 
   const handleAddMetric = (metric: AvailableMetric) => {
-    setSelectedMetrics((prev) => [...prev, metric])
-  }
+    setSelectedMetrics((prev) => [...prev, metric]);
+  };
 
   const handleRemoveMetric = (metricId: string) => {
-    setSelectedMetrics((prev) => prev.filter((metric) => metric.id !== metricId))
-  }
+    setSelectedMetrics((prev) =>
+      prev.filter((metric) => metric.id !== metricId),
+    );
+  };
 
   const handleAnalyzeSelected = () => {
     // For now, we'll simulate row selection (multiple campaigns)
@@ -242,15 +309,15 @@ export default function StaticAdsPage() {
     const mockSelectionData: SelectionData = {
       type: "rows",
       selectedAds: filteredAds, // All filtered ads as selected
-    }
+    };
 
-    setSelectionData(mockSelectionData)
-    setIsAnalysisPanelOpen(true)
-  }
+    setSelectionData(mockSelectionData);
+    setIsAnalysisPanelOpen(true);
+  };
 
   const handleAdInfo = () => {
-    setIsAdInfoModalOpen(true)
-  }
+    setIsAdInfoModalOpen(true);
+  };
 
   // Define columns for passing to AnalysisPanel
   const allColumns = [
@@ -269,10 +336,10 @@ export default function StaticAdsPage() {
     { id: "cpm", label: "CPM" },
     { id: "reach", label: "Reach" },
     { id: "frequency", label: "Frequency" },
-  ]
+  ];
 
   if (!mounted) {
-    return null
+    return null;
   }
 
   return (
@@ -280,14 +347,20 @@ export default function StaticAdsPage() {
       <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
         <div>
           <h1 className="text-lg font-semibold">Ad Account {accountId}</h1>
-          <p className="text-sm text-muted-foreground">Account ID: act_43098234098</p>
+          <p className="text-sm text-muted-foreground">
+            Account ID: act_43098234098
+          </p>
         </div>
       </header>
 
       <div className="flex-1 space-y-6 p-4 pt-6 overflow-auto">
         <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-1">Static Ads</h2>
-          <p className="text-sm text-gray-500">Manage and analyze your static advertising campaigns</p>
+          <h2 className="text-xl font-semibold text-gray-900 mb-1">
+            Static Ads
+          </h2>
+          <p className="text-sm text-gray-500">
+            Manage and analyze your static advertising campaigns
+          </p>
         </div>
 
         <SearchAndFilter
@@ -316,8 +389,12 @@ export default function StaticAdsPage() {
 
         {filteredAds.length === 0 && (
           <div className="text-center py-12">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No static ads found</h3>
-            <p className="text-gray-500">Try adjusting your search terms or filters.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No static ads found
+            </h3>
+            <p className="text-gray-500">
+              Try adjusting your search terms or filters.
+            </p>
           </div>
         )}
       </div>
@@ -337,5 +414,5 @@ export default function StaticAdsPage() {
         ad={filteredAds[0]} // Show first ad as example
       />
     </div>
-  )
+  );
 }
