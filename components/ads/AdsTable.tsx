@@ -58,7 +58,7 @@ export function AdsTable({
 
   // --- Pagination State ---
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(25);
   const pageSizes = [25, 50, 100];
   const totalPages = Math.ceil(ads.length / pageSize);
 
@@ -476,7 +476,9 @@ export function AdsTable({
                   {columnsWithExtras.map((column) => (
                     <th
                       key={column.id}
-                      className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider select-none relative group border-r border-gray-200 last:border-r-0"
+                      className={`text-xs font-medium text-gray-500 uppercase tracking-wider select-none relative group border-r border-b border-gray-200 last:border-r-0 ${
+                        column.id === "rowNumber" ? "text-center" : "text-left"
+                      }`}
                       style={{
                         width: `${getColumnWidth(column)}px`,
                         minWidth: `${getColumnWidth(column)}px`,
@@ -494,8 +496,8 @@ export function AdsTable({
                         >,
                       ) => handleColumnHeaderClick(column.id, e)}
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="flex-1 pr-2 truncate">
+                      <div className={`flex items-center ${column.id === "rowNumber" ? "justify-center" : "justify-between"}`}>
+                        <span className={`${column.id === "rowNumber" ? "" : "flex-1 pr-2"} truncate`}>
                           {column.label}
                         </span>
                         {column.id !== "rowNumber" && column.id !== "name" && (
@@ -544,17 +546,19 @@ export function AdsTable({
                   ))}
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white">
                 {pagedAds.map((ad: AdData, rowIdx: number) => (
                   <tr
                     key={ad.id}
-                    className={isRowSelected(ad.id) ? "bg-blue-100" : ""}
+                    className={`${isRowSelected(ad.id) ? "bg-blue-100" : ""} border-b border-gray-200`}
                   >
                     {columnsWithExtras.map((column) => (
                       <td
-                        key={column.id}
+                        key={`${ad.id}-${column.id}`}
                         className={
-                          `whitespace-nowrap border-r border-gray-100 last:border-r-0 overflow-hidden ` +
+                          `whitespace-nowrap border-r border-gray-100 last:border-r-0 border-b border-gray-200 overflow-hidden ${
+                            column.id === "rowNumber" ? "text-center" : ""
+                          } ` +
                           (isColSelected(column.id) ? "bg-blue-100" : "") +
                           (isCellSelected(ad.id, column.id)
                             ? "bg-blue-200"
@@ -583,7 +587,7 @@ export function AdsTable({
                             handleCellClick(ad.id, column.id);
                         }}
                       >
-                        <div className="truncate">
+                        <div className={`truncate ${column.id === "rowNumber" ? "text-center" : ""}`}>
                           {renderCellContent(ad, column, rowIdx)}
                         </div>
                       </td>

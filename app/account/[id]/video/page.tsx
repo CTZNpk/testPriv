@@ -139,7 +139,7 @@ const mockVideoAds: AdData[] = [
 for (let i = 5; i <= 54; i++) {
   const base = mockVideoAds[i % mockVideoAds.length];
   mockVideoAds.push({
-    id: `${i}`,
+    id: `video-${i}`,
     name: `${base.name} #${i}`,
     status: base.status,
     spend: Math.floor(Math.random() * 5000 + 1000),

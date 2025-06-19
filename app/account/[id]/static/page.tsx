@@ -149,7 +149,7 @@ const mockStaticAds: AdData[] = [
 for (let i = 5; i <= 54; i++) {
   const base = mockStaticAds[i % mockStaticAds.length];
   mockStaticAds.push({
-    id: `${i}`,
+    id: `static-${i}`,
     name: `${base.name} #${i}`,
     status: base.status,
     spend: Math.floor(Math.random() * 5000 + 1000),
