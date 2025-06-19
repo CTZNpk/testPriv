@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 210 35% 50%; /* #517dab */
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 194 57% 95%; /* Light version of #bcdded */
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 194 57% 85%; /* #bcdded */
+    --accent-foreground: 210 35% 20%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.75rem;
+
+    /* Opacity variations of our custom colors */
+    --primary-5: 210 35% 50% / 0.05; /* #517dab with 5% opacity */
+    --primary-10: 210 35% 50% / 0.1; /* #517dab with 10% opacity */
+    --primary-20: 210 35% 50% / 0.2; /* #517dab with 20% opacity */
+    --primary-30: 210 35% 50% / 0.3; /* #517dab with 30% opacity */
+    --primary-50: 210 35% 50% / 0.5; /* #517dab with 50% opacity */
+
+    --accent-5: 194 57% 85% / 0.05; /* #bcdded with 5% opacity */
+    --accent-10: 194 57% 85% / 0.1; /* #bcdded with 10% opacity */
+    --accent-20: 194 57% 85% / 0.2; /* #bcdded with 20% opacity */
+    --accent-30: 194 57% 85% / 0.3; /* #bcdded with 30% opacity */
+    --accent-50: 194 57% 85% / 0.5; /* #bcdded with 50% opacity */
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 194 57% 75%; /* Lighter version of #bcdded for dark mode */
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 210 35% 40%; /* Darker version of #517dab for dark mode */
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+
+    /* Opacity variations for dark mode */
+    --primary-5: 194 57% 75% / 0.05;
+    --primary-10: 194 57% 75% / 0.1;
+    --primary-20: 194 57% 75% / 0.2;
+    --primary-30: 194 57% 75% / 0.3;
+    --primary-50: 194 57% 75% / 0.5;
+
+    --accent-5: 210 35% 40% / 0.05;
+    --accent-10: 210 35% 40% / 0.1;
+    --accent-20: 210 35% 40% / 0.2;
+    --accent-30: 210 35% 40% / 0.3;
+    --accent-50: 210 35% 40% / 0.5;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
