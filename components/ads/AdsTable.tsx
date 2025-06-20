@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { AdData, AvailableMetric } from "@/types/ads";
+
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import {
   ChevronDown,
