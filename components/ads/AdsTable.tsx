@@ -84,7 +84,7 @@ export function AdsTable({
 
   // Define all possible columns
   const allColumns: ColumnConfig[] = [
-    { id: "name", label: "Ad Name", accessor: "name", minWidth: "330px" },
+    { id: "name", label: "Ad Name", accessor: "name", minWidth: "250px"},
     {
       id: "spend",
       label: "Spend",
