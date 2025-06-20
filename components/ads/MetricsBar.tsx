@@ -1,16 +1,26 @@
-"use client"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { X, Plus, Info } from "lucide-react"
-import type { AvailableMetric } from "@/types/ads"
+"use client";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { X, Plus, Info, CalendarDays } from "lucide-react";
+import { useState } from "react";
+import type { AvailableMetric } from "@/types/ads";
+import { DatePicker } from "./DatePicker";
 
 interface MetricsBarProps {
-  selectedMetrics: AvailableMetric[]
-  availableMetrics: AvailableMetric[]
-  onAddMetric: (metric: AvailableMetric) => void
-  onRemoveMetric: (metricId: string) => void
-  onAdInfo?: () => void
+  selectedMetrics: AvailableMetric[];
+  availableMetrics: AvailableMetric[];
+  onAddMetric: (metric: AvailableMetric) => void;
+  onRemoveMetric: (metricId: string) => void;
+  onAdInfo?: () => void;
+  startDate?: string;
+  endDate?: string;
+  onDateChange?: (startDate: string, endDate: string) => void;
 }
 
 export function MetricsBar({
@@ -19,6 +29,11 @@ export function MetricsBar({
   onAddMetric,
   onRemoveMetric,
   onAdInfo,
+  startDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0],
+  endDate = new Date().toISOString().split("T")[0],
+  onDateChange = () => { },
 }: MetricsBarProps) {
   return (
     <div className="w-full">
@@ -38,18 +53,25 @@ export function MetricsBar({
               </button>
             </Badge>
           ))}
-
           {availableMetrics.length > 0 && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="flex items-center gap-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-1"
+                >
                   <Plus className="h-3 w-3" />
                   Add Metrics
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48">
                 {availableMetrics.map((metric) => (
-                  <DropdownMenuItem key={metric.id} onClick={() => onAddMetric(metric)} className="cursor-pointer">
+                  <DropdownMenuItem
+                    key={metric.id}
+                    onClick={() => onAddMetric(metric)}
+                    className="cursor-pointer"
+                  >
                     {metric.label}
                   </DropdownMenuItem>
                 ))}
@@ -57,10 +79,20 @@ export function MetricsBar({
             </DropdownMenu>
           )}
         </div>
-
         <div className="flex items-center gap-2">
+          {/* Date Picker - positioned just to the left of Ad Info button */}
+          <DatePicker
+            startDate={startDate}
+            endDate={endDate}
+            onDateChange={onDateChange}
+          />
           {onAdInfo && (
-            <Button variant="outline" size="sm" onClick={onAdInfo} className="flex items-center gap-1">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onAdInfo}
+              className="flex items-center gap-1"
+            >
               <Info className="h-3 w-3" />
               Ad Info
             </Button>
@@ -68,5 +100,5 @@ export function MetricsBar({
         </div>
       </div>
     </div>
-  )
+  );
 }
