@@ -27,15 +27,13 @@ interface FilterCondition {
 }
 
 interface SearchAndFilterProps {
-  searchTerm: string;
-  onSearchChange: (value: string) => void;
-  selectedFilter: string;
-  onFilterChange: (value: string) => void;
-  onAdvancedFilter?: (
-    filters: FilterCondition[],
-    spendRange: [number, number],
-  ) => void;
-  onAnalyzeSelected?: () => void;
+  searchTerm: string
+  onSearchChange: (value: string) => void
+  selectedFilter: string
+  onFilterChange: (value: string) => void
+  onAdvancedFilter?: (filters: FilterCondition[], spendRange: [number, number]) => void
+  onAnalyzeSelected?: () => void
+  dateRangePicker?: React.ReactNode
 }
 
 const filterFields = [
@@ -99,6 +97,7 @@ export function SearchAndFilter({
   onFilterChange,
   onAdvancedFilter,
   onAnalyzeSelected,
+  dateRangePicker,
 }: SearchAndFilterProps) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [spendRange, setSpendRange] = useState<[number, number]>([1300, 8300]);
@@ -559,6 +558,12 @@ export function SearchAndFilter({
           </DialogContent>
         </Dialog>
       </div>
+
+      {dateRangePicker && (
+        <div className="flex items-center">
+          {dateRangePicker}
+        </div>
+      )}
 
       <div className="flex justify-end">
         <Button
