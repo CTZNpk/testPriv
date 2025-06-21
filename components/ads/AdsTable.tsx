@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { AdData, AvailableMetric } from "@/types/ads";
+
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import {
   ChevronDown,
@@ -83,7 +84,7 @@ export function AdsTable({
 
   // Define all possible columns
   const allColumns: ColumnConfig[] = [
-    { id: "name", label: "Ad Name", accessor: "name", minWidth: "330px" },
+    { id: "name", label: "Ad Name", accessor: "name", minWidth: "250px"},
     {
       id: "spend",
       label: "Spend",

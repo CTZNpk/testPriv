@@ -213,6 +213,12 @@ export default function VideoAdsPage() {
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
+  // Date range state
+  const [dateRange, setDateRange] = useState({
+    startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days ago
+    endDate: new Date().toISOString().split('T')[0] // today
+  });
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -314,6 +320,12 @@ export default function VideoAdsPage() {
     setIsAdInfoModalOpen(true);
   };
 
+  const handleDateChange = (startDate: string, endDate: string) => {
+    setDateRange({ startDate, endDate });
+    // Here you would typically refetch data or filter based on the new date range
+    console.log('Date range changed:', { startDate, endDate });
+  };
+
   // Define columns for passing to AnalysisPanel
   const allColumns = [
     { id: "rowNumber", label: "#" },
@@ -387,6 +399,9 @@ export default function VideoAdsPage() {
           onAddMetric={handleAddMetric}
           onRemoveMetric={handleRemoveMetric}
           onAdInfo={handleAdInfo}
+          startDate={dateRange.startDate}
+          endDate={dateRange.endDate}
+          onDateChange={handleDateChange}
         />
 
         <AdsTable
