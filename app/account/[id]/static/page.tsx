@@ -7,6 +7,7 @@ import { MetricsBar } from "@/components/ads/MetricsBar";
 import { AdsTable } from "@/components/ads/AdsTable";
 import { AnalysisPanel } from "@/components/ads/AnalysisPanel";
 import { AdInfoModal } from "@/components/ads/AdInfoModal";
+import { DateRangePicker } from "@/components/ui/date-picker";
 import type {
   AdData,
   AvailableMetric,
@@ -214,9 +215,11 @@ export default function StaticAdsPage() {
   const [selectionData, setSelectionData] = useState<SelectionData>({
     type: "rows",
   });
-  const [tableSelection, setTableSelection] = useState<TableSelection | null>(
-    null,
+  const [tableSelection, setTableSelection] = useState<TableSelection | undefined>(
+    undefined,
   );
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
     setMounted(true);
@@ -344,7 +347,7 @@ export default function StaticAdsPage() {
 
   return (
     <div className="flex flex-col h-full max-w-full overflow-hidden">
-      <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+      <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b px-4">
         <div>
           <h1 className="text-lg font-semibold">Ad Account {accountId}</h1>
           <p className="text-sm text-muted-foreground">
@@ -363,14 +366,26 @@ export default function StaticAdsPage() {
           </p>
         </div>
 
-        <SearchAndFilter
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          selectedFilter={selectedFilter}
-          onFilterChange={setSelectedFilter}
-          onAdvancedFilter={handleAdvancedFilter}
-          onAnalyzeSelected={handleAnalyzeSelected}
-        />
+        <div className="space-y-4">
+          <SearchAndFilter
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            selectedFilter={selectedFilter}
+            onFilterChange={setSelectedFilter}
+            onAdvancedFilter={handleAdvancedFilter}
+            onAnalyzeSelected={handleAnalyzeSelected}
+            dateRangePicker={
+              <DateRangePicker
+                startDate={startDate}
+                endDate={endDate}
+                onStartDateChange={setStartDate}
+                onEndDateChange={setEndDate}
+                startPlaceholder="Start date"
+                endPlaceholder="End date"
+              />
+            }
+          />
+        </div>
 
         <MetricsBar
           selectedMetrics={selectedMetrics}
