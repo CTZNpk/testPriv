@@ -7,13 +7,14 @@ import { MetricsBar } from "@/components/ads/MetricsBar";
 import { AdsTable } from "@/components/ads/AdsTable";
 import { AnalysisPanel } from "@/components/ads/AnalysisPanel";
 import { AdInfoModal } from "@/components/ads/AdInfoModal";
-import { DateRangePicker } from "@/components/ui/date-picker";
+
 import type {
   AdData,
   AvailableMetric,
   SelectionData,
   TableSelection,
 } from "@/types/ads";
+import { DatePicker } from "@/components/ads/DatePicker";
 
 interface FilterCondition {
   id: string;
@@ -215,14 +216,16 @@ export default function StaticAdsPage() {
   const [selectionData, setSelectionData] = useState<SelectionData>({
     type: "rows",
   });
-  const [tableSelection, setTableSelection] = useState<TableSelection | undefined>(
-    undefined,
-  );
+  const [tableSelection, setTableSelection] = useState<
+    TableSelection | undefined
+  >(undefined);
 
   // Date range state
   const [dateRange, setDateRange] = useState({
-    startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days ago
-    endDate: new Date().toISOString().split('T')[0] // today
+    startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0], // 30 days ago
+    endDate: new Date().toISOString().split("T")[0], // today
   });
 
   useEffect(() => {
@@ -329,7 +332,7 @@ export default function StaticAdsPage() {
   const handleDateChange = (startDate: string, endDate: string) => {
     setDateRange({ startDate, endDate });
     // Here you would typically refetch data or filter based on the new date range
-    console.log('Date range changed:', { startDate, endDate });
+    console.log("Date range changed:", { startDate, endDate });
   };
 
   // Define columns for passing to AnalysisPanel
@@ -367,13 +370,21 @@ export default function StaticAdsPage() {
       </header>
 
       <div className="flex-1 space-y-6 p-4 pt-6 overflow-auto">
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-1">
-            Static Ads
-          </h2>
-          <p className="text-sm text-gray-500">
-            Manage and analyze your static advertising campaigns
-          </p>
+        <div className="flex justify-between items-start">
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-1">
+              Static Ads
+            </h2>
+            <p className="text-sm text-gray-500">
+              Manage and analyze your static advertising campaigns
+            </p>
+          </div>
+
+          <DatePicker
+            startDate={dateRange.startDate}
+            endDate={dateRange.endDate}
+            onDateChange={handleDateChange}
+          />
         </div>
 
         <div className="space-y-4">
@@ -393,9 +404,6 @@ export default function StaticAdsPage() {
           onAddMetric={handleAddMetric}
           onRemoveMetric={handleRemoveMetric}
           onAdInfo={handleAdInfo}
-          startDate={dateRange.startDate}
-          endDate={dateRange.endDate}
-          onDateChange={handleDateChange}
         />
 
         <AdsTable

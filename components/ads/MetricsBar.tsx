@@ -10,7 +10,6 @@ import {
 import { X, Plus, Info, CalendarDays } from "lucide-react";
 import { useState } from "react";
 import type { AvailableMetric } from "@/types/ads";
-import { DatePicker } from "./DatePicker";
 
 interface MetricsBarProps {
   selectedMetrics: AvailableMetric[];
@@ -81,11 +80,6 @@ export function MetricsBar({
         </div>
         <div className="flex items-center gap-2">
           {/* Date Picker - positioned just to the left of Ad Info button */}
-          <DatePicker
-            startDate={startDate}
-            endDate={endDate}
-            onDateChange={onDateChange}
-          />
           {onAdInfo && (
             <Button
               variant="outline"

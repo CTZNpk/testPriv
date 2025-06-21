@@ -143,7 +143,7 @@ export function AnalysisPanel({
       // Show the selected cell value
       if (!selection.cell) return null;
       const ad = getAdById(selection.cell.row);
-      const col = columns.find((c: any) => c.id === selection.cell.col);
+      const col = columns.find((c: any) => c.id === selection.cell!.col);
       return (
         <div className="mb-4">
           <h3 className="font-semibold mb-2">Selected Cell</h3>
