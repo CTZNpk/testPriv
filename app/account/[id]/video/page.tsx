@@ -380,16 +380,6 @@ export default function VideoAdsPage() {
             onFilterChange={setSelectedFilter}
             onAdvancedFilter={handleAdvancedFilter}
             onAnalyzeSelected={handleAnalyzeSelected}
-            dateRangePicker={
-              <DateRangePicker
-                startDate={startDate}
-                endDate={endDate}
-                onStartDateChange={setStartDate}
-                onEndDateChange={setEndDate}
-                startPlaceholder="Start date"
-                endPlaceholder="End date"
-              />
-            }
           />
         </div>
 
