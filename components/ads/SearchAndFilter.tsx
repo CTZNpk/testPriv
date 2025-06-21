@@ -1,17 +1,29 @@
-"use client"
+"use client";
 
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, Filter, Plus, X } from "lucide-react"
-import { useState } from "react"
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Search, Filter, Plus, X } from "lucide-react";
+import { useState } from "react";
 
 interface FilterCondition {
-  id: string
-  field: string
-  operator: string
-  value: string
+  id: string;
+  field: string;
+  operator: string;
+  value: string;
 }
 
 interface SearchAndFilterProps {
@@ -21,21 +33,20 @@ interface SearchAndFilterProps {
   onFilterChange: (value: string) => void
   onAdvancedFilter?: (filters: FilterCondition[], spendRange: [number, number]) => void
   onAnalyzeSelected?: () => void
-  dateRangePicker?: React.ReactNode
 }
 
 const filterFields = [
   { value: "name", label: "Ad name" },
   { value: "adsetName", label: "Adset name" },
   { value: "campaignName", label: "Campaign name" },
-]
+];
 
 const filterOperators = [
   { value: "is", label: "is" },
   { value: "is_not", label: "is not" },
   { value: "contains", label: "contains" },
   { value: "not_contains", label: "not contains" },
-]
+];
 
 // Mock data for dropdown values
 const adNames = [
@@ -48,7 +59,7 @@ const adNames = [
   "Brand Logo Campaign",
   "Holiday Promotion Static",
   "App Feature Highlight",
-]
+];
 
 const adsetNames = [
   "Summer Collection Targeting",
@@ -56,7 +67,7 @@ const adsetNames = [
   "Product Demo Retargeting",
   "Holiday Special Interest",
   "Summer Sale Broad",
-]
+];
 
 const campaignNames = [
   "Q4 Holiday Campaign",
@@ -64,19 +75,19 @@ const campaignNames = [
   "Brand Awareness Drive",
   "Product Launch Campaign",
   "Retargeting Campaign",
-]
+];
 
-const MAX_SPEND = 50000
+const MAX_SPEND = 50000;
 
 // Helper function to format numbers with commas
 const formatNumber = (num: number): string => {
-  return num.toLocaleString()
-}
+  return num.toLocaleString();
+};
 
 // Helper function to parse formatted number string back to number
 const parseFormattedNumber = (str: string): number => {
-  return Number.parseInt(str.replace(/,/g, "")) || 0
-}
+  return Number.parseInt(str.replace(/,/g, "")) || 0;
+};
 
 export function SearchAndFilter({
   searchTerm,
@@ -85,15 +96,14 @@ export function SearchAndFilter({
   onFilterChange,
   onAdvancedFilter,
   onAnalyzeSelected,
-  dateRangePicker,
 }: SearchAndFilterProps) {
-  const [isFilterOpen, setIsFilterOpen] = useState(false)
-  const [spendRange, setSpendRange] = useState<[number, number]>([1300, 8300])
-  const [minSpendInput, setMinSpendInput] = useState("1,300")
-  const [maxSpendInput, setMaxSpendInput] = useState("8,300")
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [spendRange, setSpendRange] = useState<[number, number]>([1300, 8300]);
+  const [minSpendInput, setMinSpendInput] = useState("1,300");
+  const [maxSpendInput, setMaxSpendInput] = useState("8,300");
   const [filterConditions, setFilterConditions] = useState<FilterCondition[]>([
     { id: "1", field: "", operator: "", value: "" },
-  ])
+  ]);
 
   const addFilterCondition = () => {
     const newCondition: FilterCondition = {
@@ -101,88 +111,94 @@ export function SearchAndFilter({
       field: "name", // Set default field
       operator: "is", // Set default operator
       value: "",
-    }
-    setFilterConditions([...filterConditions, newCondition])
-  }
+    };
+    setFilterConditions([...filterConditions, newCondition]);
+  };
 
   const removeFilterCondition = (id: string) => {
     if (filterConditions.length > 1) {
-      setFilterConditions(filterConditions.filter((condition) => condition.id !== id))
+      setFilterConditions(
+        filterConditions.filter((condition) => condition.id !== id),
+      );
     }
-  }
+  };
 
-  const updateFilterCondition = (id: string, field: keyof FilterCondition, value: string) => {
+  const updateFilterCondition = (
+    id: string,
+    field: keyof FilterCondition,
+    value: string,
+  ) => {
     setFilterConditions(
       filterConditions.map((condition) => {
         if (condition.id === id) {
-          const updatedCondition = { ...condition, [field]: value }
+          const updatedCondition = { ...condition, [field]: value };
           // Reset value when field or operator changes
           if (field === "field" || field === "operator") {
-            updatedCondition.value = ""
+            updatedCondition.value = "";
           }
-          return updatedCondition
+          return updatedCondition;
         }
-        return condition
+        return condition;
       }),
-    )
-  }
+    );
+  };
 
   const handleSpendRangeChange = (value: [number, number]) => {
-    setSpendRange(value)
-    setMinSpendInput(formatNumber(value[0]))
-    setMaxSpendInput(formatNumber(value[1]))
-  }
+    setSpendRange(value);
+    setMinSpendInput(formatNumber(value[0]));
+    setMaxSpendInput(formatNumber(value[1]));
+  };
 
   const handleMinSpendInputChange = (value: string) => {
-    setMinSpendInput(value)
-    const numValue = parseFormattedNumber(value)
+    setMinSpendInput(value);
+    const numValue = parseFormattedNumber(value);
     if (numValue <= spendRange[1]) {
-      setSpendRange([numValue, spendRange[1]])
+      setSpendRange([numValue, spendRange[1]]);
     }
-  }
+  };
 
   const handleMaxSpendInputChange = (value: string) => {
-    setMaxSpendInput(value)
-    const numValue = parseFormattedNumber(value)
+    setMaxSpendInput(value);
+    const numValue = parseFormattedNumber(value);
     if (numValue >= spendRange[0]) {
-      setSpendRange([spendRange[0], numValue])
+      setSpendRange([spendRange[0], numValue]);
     }
-  }
+  };
 
   const getDropdownValues = (field: string) => {
     switch (field) {
       case "name":
-        return adNames
+        return adNames;
       case "adsetName":
-        return adsetNames
+        return adsetNames;
       case "campaignName":
-        return campaignNames
+        return campaignNames;
       default:
-        return []
+        return [];
     }
-  }
+  };
 
   const applyFilters = () => {
     if (onAdvancedFilter) {
-      onAdvancedFilter(filterConditions, spendRange)
+      onAdvancedFilter(filterConditions, spendRange);
     }
-    setIsFilterOpen(false)
-  }
+    setIsFilterOpen(false);
+  };
 
   const resetFilters = () => {
-    setFilterConditions([{ id: "1", field: "", operator: "", value: "" }])
-    setSpendRange([0, MAX_SPEND])
-    setMinSpendInput("0")
-    setMaxSpendInput(formatNumber(MAX_SPEND))
-  }
+    setFilterConditions([{ id: "1", field: "", operator: "", value: "" }]);
+    setSpendRange([0, MAX_SPEND]);
+    setMinSpendInput("0");
+    setMaxSpendInput(formatNumber(MAX_SPEND));
+  };
 
   const shouldShowDropdown = (operator: string) => {
-    return operator === "is" || operator === "is_not"
-  }
+    return operator === "is" || operator === "is_not";
+  };
 
   const shouldShowTextInput = (operator: string) => {
-    return operator === "contains" || operator === "not_contains"
-  }
+    return operator === "contains" || operator === "not_contains";
+  };
 
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 flex-wrap">
@@ -216,7 +232,9 @@ export function SearchAndFilter({
             <div className="space-y-6 py-4">
               {/* Ad Spend Range Filter */}
               <div className="space-y-4">
-                <h4 className="text-sm font-medium text-gray-900">Ad Spend Range</h4>
+                <h4 className="text-sm font-medium text-gray-900">
+                  Ad Spend Range
+                </h4>
                 <div className="px-3">
                   {/* Custom Dual Range Slider */}
                   <div className="relative w-full h-6 flex items-center">
@@ -232,66 +250,90 @@ export function SearchAndFilter({
                     {/* Left Handle */}
                     <div
                       className="absolute w-5 h-5 bg-white border-2 border-[hsl(var(--primary))] rounded-full cursor-pointer shadow-sm hover:shadow-md transition-shadow z-10"
-                      style={{ left: `calc(${(spendRange[0] / MAX_SPEND) * 100}% - 10px)` }}
+                      style={{
+                        left: `calc(${(spendRange[0] / MAX_SPEND) * 100}% - 10px)`,
+                      }}
                       onMouseDown={(e) => {
-                        e.preventDefault()
-                        const startX = e.clientX
-                        const startValue = spendRange[0]
-                        const slider = e.currentTarget.parentElement
-                        const sliderRect = slider!.getBoundingClientRect()
+                        e.preventDefault();
+                        const startX = e.clientX;
+                        const startValue = spendRange[0];
+                        const slider = e.currentTarget.parentElement;
+                        const sliderRect = slider!.getBoundingClientRect();
 
                         const handleMouseMove = (e: MouseEvent) => {
-                          const deltaX = e.clientX - startX
-                          const deltaPercent = (deltaX / sliderRect.width) * 100
-                          const deltaValue = (deltaPercent / 100) * MAX_SPEND
+                          const deltaX = e.clientX - startX;
+                          const deltaPercent =
+                            (deltaX / sliderRect.width) * 100;
+                          const deltaValue = (deltaPercent / 100) * MAX_SPEND;
                           const newValue = Math.max(
                             0,
-                            Math.min(spendRange[1] - 100, Math.round((startValue + deltaValue) / 100) * 100),
-                          )
-                          setSpendRange([newValue, spendRange[1]])
-                          setMinSpendInput(formatNumber(newValue))
-                        }
+                            Math.min(
+                              spendRange[1] - 100,
+                              Math.round((startValue + deltaValue) / 100) * 100,
+                            ),
+                          );
+                          setSpendRange([newValue, spendRange[1]]);
+                          setMinSpendInput(formatNumber(newValue));
+                        };
 
                         const handleMouseUp = () => {
-                          document.removeEventListener("mousemove", handleMouseMove)
-                          document.removeEventListener("mouseup", handleMouseUp)
-                        }
+                          document.removeEventListener(
+                            "mousemove",
+                            handleMouseMove,
+                          );
+                          document.removeEventListener(
+                            "mouseup",
+                            handleMouseUp,
+                          );
+                        };
 
-                        document.addEventListener("mousemove", handleMouseMove)
-                        document.addEventListener("mouseup", handleMouseUp)
+                        document.addEventListener("mousemove", handleMouseMove);
+                        document.addEventListener("mouseup", handleMouseUp);
                       }}
                     ></div>
 
                     {/* Right Handle */}
                     <div
                       className="absolute w-5 h-5 bg-white border-2 border-[hsl(var(--primary))] rounded-full cursor-pointer shadow-sm hover:shadow-md transition-shadow z-10"
-                      style={{ left: `calc(${(spendRange[1] / MAX_SPEND) * 100}% - 10px)` }}
+                      style={{
+                        left: `calc(${(spendRange[1] / MAX_SPEND) * 100}% - 10px)`,
+                      }}
                       onMouseDown={(e) => {
-                        e.preventDefault()
-                        const startX = e.clientX
-                        const startValue = spendRange[1]
-                        const slider = e.currentTarget.parentElement
-                        const sliderRect = slider!.getBoundingClientRect()
+                        e.preventDefault();
+                        const startX = e.clientX;
+                        const startValue = spendRange[1];
+                        const slider = e.currentTarget.parentElement;
+                        const sliderRect = slider!.getBoundingClientRect();
 
                         const handleMouseMove = (e: MouseEvent) => {
-                          const deltaX = e.clientX - startX
-                          const deltaPercent = (deltaX / sliderRect.width) * 100
-                          const deltaValue = (deltaPercent / 100) * MAX_SPEND
+                          const deltaX = e.clientX - startX;
+                          const deltaPercent =
+                            (deltaX / sliderRect.width) * 100;
+                          const deltaValue = (deltaPercent / 100) * MAX_SPEND;
                           const newValue = Math.max(
                             spendRange[0] + 100,
-                            Math.min(MAX_SPEND, Math.round((startValue + deltaValue) / 100) * 100),
-                          )
-                          setSpendRange([spendRange[0], newValue])
-                          setMaxSpendInput(formatNumber(newValue))
-                        }
+                            Math.min(
+                              MAX_SPEND,
+                              Math.round((startValue + deltaValue) / 100) * 100,
+                            ),
+                          );
+                          setSpendRange([spendRange[0], newValue]);
+                          setMaxSpendInput(formatNumber(newValue));
+                        };
 
                         const handleMouseUp = () => {
-                          document.removeEventListener("mousemove", handleMouseMove)
-                          document.removeEventListener("mouseup", handleMouseUp)
-                        }
+                          document.removeEventListener(
+                            "mousemove",
+                            handleMouseMove,
+                          );
+                          document.removeEventListener(
+                            "mouseup",
+                            handleMouseUp,
+                          );
+                        };
 
-                        document.addEventListener("mousemove", handleMouseMove)
-                        document.addEventListener("mouseup", handleMouseUp)
+                        document.addEventListener("mousemove", handleMouseMove);
+                        document.addEventListener("mouseup", handleMouseUp);
                       }}
                     ></div>
                   </div>
@@ -301,7 +343,9 @@ export function SearchAndFilter({
                       <span className="text-sm text-gray-500">$</span>
                       <Input
                         value={minSpendInput}
-                        onChange={(e) => handleMinSpendInputChange(e.target.value)}
+                        onChange={(e) =>
+                          handleMinSpendInputChange(e.target.value)
+                        }
                         className="w-28 h-8 text-sm"
                         type="text"
                         placeholder="0"
@@ -311,7 +355,9 @@ export function SearchAndFilter({
                       <span className="text-sm text-gray-500">$</span>
                       <Input
                         value={maxSpendInput}
-                        onChange={(e) => handleMaxSpendInputChange(e.target.value)}
+                        onChange={(e) =>
+                          handleMaxSpendInputChange(e.target.value)
+                        }
                         className="w-28 h-8 text-sm"
                         type="text"
                         placeholder="50,000"
@@ -323,18 +369,30 @@ export function SearchAndFilter({
 
               {/* Conditional Filters */}
               <div className="space-y-4">
-                <h4 className="text-sm font-medium text-gray-900">Conditions</h4>
+                <h4 className="text-sm font-medium text-gray-900">
+                  Conditions
+                </h4>
 
                 <div className="pl-4 space-y-4">
                   {filterConditions.map((condition, index) => (
                     <div key={condition.id} className="space-y-3">
                       <div className="flex items-center gap-3">
-                        {index === 0 && <span className="text-sm text-gray-600 w-12">Where</span>}
-                        {index > 0 && <span className="text-sm text-gray-600 w-12">And</span>}
+                        {index === 0 && (
+                          <span className="text-sm text-gray-600 w-12">
+                            Where
+                          </span>
+                        )}
+                        {index > 0 && (
+                          <span className="text-sm text-gray-600 w-12">
+                            And
+                          </span>
+                        )}
 
                         <Select
                           value={condition.field}
-                          onValueChange={(value) => updateFilterCondition(condition.id, "field", value)}
+                          onValueChange={(value) =>
+                            updateFilterCondition(condition.id, "field", value)
+                          }
                         >
                           <SelectTrigger className="w-40">
                             <SelectValue placeholder="Ad name" />
@@ -350,14 +408,23 @@ export function SearchAndFilter({
 
                         <Select
                           value={condition.operator}
-                          onValueChange={(value) => updateFilterCondition(condition.id, "operator", value)}
+                          onValueChange={(value) =>
+                            updateFilterCondition(
+                              condition.id,
+                              "operator",
+                              value,
+                            )
+                          }
                         >
                           <SelectTrigger className="w-40">
                             <SelectValue placeholder="is" />
                           </SelectTrigger>
                           <SelectContent>
                             {filterOperators.map((operator) => (
-                              <SelectItem key={operator.value} value={operator.value}>
+                              <SelectItem
+                                key={operator.value}
+                                value={operator.value}
+                              >
                                 {operator.label}
                               </SelectItem>
                             ))}
@@ -370,17 +437,25 @@ export function SearchAndFilter({
                             {shouldShowDropdown(condition.operator) && (
                               <Select
                                 value={condition.value}
-                                onValueChange={(value) => updateFilterCondition(condition.id, "value", value)}
+                                onValueChange={(value) =>
+                                  updateFilterCondition(
+                                    condition.id,
+                                    "value",
+                                    value,
+                                  )
+                                }
                               >
                                 <SelectTrigger className="w-40">
                                   <SelectValue placeholder="Select value" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {getDropdownValues(condition.field).map((value) => (
-                                    <SelectItem key={value} value={value}>
-                                      {value}
-                                    </SelectItem>
-                                  ))}
+                                  {getDropdownValues(condition.field).map(
+                                    (value) => (
+                                      <SelectItem key={value} value={value}>
+                                        {value}
+                                      </SelectItem>
+                                    ),
+                                  )}
                                 </SelectContent>
                               </Select>
                             )}
@@ -389,7 +464,13 @@ export function SearchAndFilter({
                               <Input
                                 placeholder="Enter value"
                                 value={condition.value}
-                                onChange={(e) => updateFilterCondition(condition.id, "value", e.target.value)}
+                                onChange={(e) =>
+                                  updateFilterCondition(
+                                    condition.id,
+                                    "value",
+                                    e.target.value,
+                                  )
+                                }
                                 className="w-40"
                               />
                             )}
@@ -399,7 +480,9 @@ export function SearchAndFilter({
                         {/* Show placeholder when field or operator is not selected */}
                         {(!condition.field || !condition.operator) && (
                           <div className="w-40 h-10 border border-gray-200 rounded-md flex items-center px-3 text-gray-400 text-sm">
-                            {!condition.field ? "Select field first" : "Select operator"}
+                            {!condition.field
+                              ? "Select field first"
+                              : "Select operator"}
                           </div>
                         )}
 
@@ -417,7 +500,11 @@ export function SearchAndFilter({
                     </div>
                   ))}
 
-                  <Button variant="ghost" onClick={addFilterCondition} className="flex items-center gap-2 text-sm">
+                  <Button
+                    variant="ghost"
+                    onClick={addFilterCondition}
+                    className="flex items-center gap-2 text-sm"
+                  >
                     <Plus className="h-4 w-4" />
                     Add condition
                   </Button>
@@ -427,7 +514,9 @@ export function SearchAndFilter({
               {/* Group By Section */}
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <h4 className="text-sm font-medium text-gray-900">Group by</h4>
+                  <h4 className="text-sm font-medium text-gray-900">
+                    Group by
+                  </h4>
                   <Select defaultValue="">
                     <SelectTrigger className="w-40">
                       <SelectValue placeholder="Select grouping" />
@@ -435,7 +524,9 @@ export function SearchAndFilter({
                     <SelectContent>
                       <SelectItem value="name">Ad name</SelectItem>
                       <SelectItem value="adsetName">Adset name</SelectItem>
-                      <SelectItem value="campaignName">Campaign name</SelectItem>
+                      <SelectItem value="campaignName">
+                        Campaign name
+                      </SelectItem>
                       <SelectItem value="landingPage">Landing page</SelectItem>
                     </SelectContent>
                   </Select>
@@ -448,10 +539,16 @@ export function SearchAndFilter({
                 Reset
               </Button>
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setIsFilterOpen(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsFilterOpen(false)}
+                >
                   Cancel
                 </Button>
-                <Button onClick={applyFilters} className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary-50))]">
+                <Button
+                  onClick={applyFilters}
+                  className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary-50))]"
+                >
                   Apply
                 </Button>
               </div>
@@ -459,12 +556,6 @@ export function SearchAndFilter({
           </DialogContent>
         </Dialog>
       </div>
-
-      {dateRangePicker && (
-        <div className="flex items-center">
-          {dateRangePicker}
-        </div>
-      )}
 
       <div className="flex justify-end">
         <Button
@@ -475,5 +566,5 @@ export function SearchAndFilter({
         </Button>
       </div>
     </div>
-  )
+  );
 }
